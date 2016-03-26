@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="./Directions.js"></script>
+        <script type="text/javascript" src="./SnakeGraphics.js"></script>
+        <script type="text/javascript" src="./SnakeGame.js"></script>
+        <link rel="stylesheet" type="text/css" href="./styles.css">
+        <script>
+        (function() {
+            
+            var game = null;
+            var canvas = null;
+            var context = null;
+            var graphics = null;
+            var statusEl = null;
+            var pointsEl = null;
+            var size = 19;
+            var tickSpeed = 70;
+            
+            function tick() {
+                game.tick();
+                graphics.draw();
+                reportPoints();
+                reportStatus();
+                setTimeout(wait, tickSpeed);
+            }
+            
+            function reportStatus() {
+                statusEl.innerHTML = game.isAlive ? "" : "Game Over!";
+            }
+            
+            function reportPoints() {
+                pointsEl.innerHTML = game.points;
+            }
+            
+            function wait() {
+                requestAnimationFrame(tick);
+            }
+        
+            function resizeGame () {
+            	var padWidth = 50;
+            	var padHeight = 150;
+                var max = Math.min(window.innerWidth - padWidth, window.innerHeight - padHeight);
+                canvas.style.width = max + "px";
+                canvas.style.height = max + "px";
+            }
+            
+            function assignMovementEventHandler(direction, keyCode) {
+                
+                document.body.addEventListener("keydown", function(event) {
+                    if (keyCode == event.keyCode)
+                        game.moves.push(direction);
+                        if (game.moves.length > 2)
+                            game.moves.shift();
+                        if (game.body.length > 1
+                        && directions.getOppositeDirection(game.direction) == game.moves[0])
+                            game.moves.shift();
+                }, true);
+            }
+            
+            window.onload = function() {
+                
+                statusEl = document.getElementById("status");
+                pointsEl = document.getElementById("points");
+                canvas = document.getElementById("gameCanvas");
+                context = canvas.getContext("2d");
+                
+                game = new SnakeGame(size, size);
+                directions.getDirections().forEach(function(direction) {
+                    directions.getKeyCodes(direction).forEach(function(keyCode) {
+                        assignMovementEventHandler(direction, keyCode);    
+                    });
+                });
+                
+                graphics = SnakeGraphics(game, canvas, context);
+                
+                
+                document.getElementById("newGame").addEventListener("click", function() {
+                    game = new SnakeGame(size, size);
+                    graphics = SnakeGraphics(game, canvas, context);
+                });
+                
+                window.addEventListener("resize", resizeGame);
+                
+                resizeGame();
+                tick();
+            }
+        })();
+        </script>
+    </head>
+    <body>
+        <div>Snakes on a Plane!</div>
+        <div>
+            <div>
+                       <span id="status"> </span>
+                Score: <span id="points"> </span>
+            </div>
+            <canvas id="gameCanvas" width="1500" height="1500"></canvas>
+        </div>
+        <div id="controls">
+            <button id="newGame">New Game</button>
+        </div>
+    </body>
+</html>

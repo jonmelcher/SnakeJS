@@ -1,0 +1,23 @@
+html {
+    background-color: #BADA55;
+    color: black;
+}
+
+body {
+    text-align: center;
+}
+
+div {
+    margin: 0 auto;
+}
+
+span {
+    display: inline-block;
+    margin: 0.5em;
+}
+
+canvas {
+    width: 35%;
+    border: 0.5em solid gold;
+    border-radius: 3px;
+}
