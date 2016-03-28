@@ -54,12 +54,12 @@
         
         document.body.addEventListener("keydown", function(event) {
             if (keyCode == event.keyCode)
-                game.moves.push(direction);
-                if (game.moves.length > 2)
-                    game.moves.shift();
+                game.movements.push(direction);
+                if (game.movements.length > 2)
+                    game.movements.shift();
                 if (game.body.length > 1
-                && directions.getOppositeDirection(game.direction) == game.moves[0])
-                    game.moves.shift();
+                && directions.getOppositeDirection(game.direction) == game.movements[0])
+                    game.movements.shift();
         }, true);
     }
     
@@ -74,13 +74,14 @@
         game = new SnakeGame(size, size);
         graphics = SnakeGraphics(game, canvas, context);
 
-        // assign event handlers
+        // assign event handlers for each direction
         directions.getDirections().forEach(function(direction) {
             directions.getKeyCodes(direction).forEach(function(keyCode) {
                 assignMovementEventHandler(direction, keyCode);    
             });
         });
         
+        // assign GUI event handlers
         document.getElementById("newGame").addEventListener("click", function() {
             game = new SnakeGame(size, size);
             graphics = SnakeGraphics(game, canvas, context);
@@ -88,10 +89,7 @@
         
         window.addEventListener("resize", resizeGame);
         
-        // premptive resize
         resizeGame();
-
-        // start ticking
         tick();
     }
 
