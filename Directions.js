@@ -25,11 +25,8 @@ function Directions() {
     
     // determines the opposite direction name of the given one - note that the opposite of null is null
     function getOppositeDirection(direction) {
-        
         var opposites = { "up" : "down", "left" : "right"};
-        if (!opposites[direction])
-            opposites = flip(opposites);
-        return opposites[direction] || null;
+        return opposites[direction] || flip(opposites)[direction] || null;
     }
     
     // retrieves all keycode associated with the given direction name
