@@ -3,7 +3,7 @@
 //  purpose:        provides an engine for calculating the state of the classic game 'Snake'
 //
 //  written by Jonathan Melcher on 2016-03-26
-// ***************************************************************************************** 
+// *****************************************************************************************
 
 // module taken from Directions.js
 var directions = Directions();
@@ -33,7 +33,6 @@ SnakeGame.prototype.isInBody = function(move) {
 // generates a new location for the apple on the playing area which does not collide with the player
 // if no location exists the game ends
 SnakeGame.prototype.nextApple = function () {
-
     if (this.body.length == this.cols * this.rows) {
         this.isAlive = false;
         return { x: -1, y: -1 };
@@ -45,10 +44,10 @@ SnakeGame.prototype.nextApple = function () {
     // below will typically run faster, slowing down when the player occupies more and more of the playing area
 
     var appleLoc;
-    do
+    do {
         appleLoc = this.getRandomLocation();
+    }
     while (this.isInBody(appleLoc));
-
     return appleLoc;
 };
 
@@ -57,17 +56,15 @@ SnakeGame.prototype.isOutOfBounds = function (x, y) {
 };
 
 SnakeGame.prototype.getNewHead = function () {
-
     var head = this.body[this.body.length - 1];
-
     switch (this.direction) {
-        case "up":
+        case 'up':
             return { x: head.x, y: head.y - 1 };
-        case "down":
+        case 'down':
             return { x: head.x, y: head.y + 1 };
-        case "left":
+        case 'left':
             return { x: head.x - 1, y: head.y };
-        case "right":
+        case 'right':
             return { x: head.x + 1, y: head.y };
         default:
             return { x: head.x, y: head.y };
@@ -79,14 +76,13 @@ SnakeGame.prototype.isMoveValid = function(move) {
 }
 
 SnakeGame.prototype.tick = function () {
-
     this.direction = this.movements.shift() || this.direction;
 
-    if (!(this.isAlive && this.direction))
+    if (!(this.isAlive && this.direction)) {
         return;
-    
-    var newHead = this.getNewHead();
+    }
 
+    var newHead = this.getNewHead();
     if (!this.isMoveValid(newHead)) {
         this.isAlive = false;
         return;
@@ -100,6 +96,7 @@ SnakeGame.prototype.tick = function () {
         this.apple = this.nextApple();
         ++this.points;
     }
-    else
+    else {
         this.body.shift();
+    }
 };

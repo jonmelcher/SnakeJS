@@ -6,7 +6,7 @@
 // *******************************************************************
 
 (function() {
-    
+
     var game = null;            // instance of SnakeGame
     var canvas = null;          // canvas
     var context = null;         // canvas context
@@ -14,8 +14,8 @@
     var statusEl = null;        // status scan element in index.html
     var pointsEl = null;        // points scan element in index.html
     var size = 19;              // number of rows / columns of playing area
-    var tickSpeedMs = 70;       // tick speed of game in milliseconds 
-    
+    var tickSpeedMs = 70;       // tick speed of game in milliseconds
+
     // canvas tick procedure
     function tick() {
         game.tick();                        // calculate next state of game
@@ -24,7 +24,7 @@
         reportStatus();                     // update scan element
         setTimeout(wait, tickSpeedMs);      // wait for next tick
     }
-    
+
     // tick callback
     function wait() {
         requestAnimationFrame(tick);
@@ -34,7 +34,7 @@
     function reportStatus() {
         statusEl.innerHTML = game.isAlive ? "" : "Game Over!";
     }
-    
+
     // updates points scan element with accumulated points of game
     function reportPoints() {
         pointsEl.innerHTML = game.points;
@@ -48,24 +48,26 @@
         canvas.style.width = max + "px";
         canvas.style.height = max + "px";
     }
-    
+
     // assigns a keydown event given direction name and its keycode
     function assignMovementEventHandler(direction, keyCode) {
-        
+
         document.body.addEventListener("keydown", function(event) {
-            if (keyCode == event.keyCode)
+            if (keyCode === event.keyCode) {
                 game.movements.push(direction);
-                if (game.movements.length > 2)
-                    game.movements.shift();
-                if (game.body.length > 1
-                && directions.getOppositeDirection(game.direction) == game.movements[0])
-                    game.movements.shift();
+            }
+            if (game.movements.length > 2) {
+                game.movements.shift();
+            }
+            if (game.body.length > 1 && directions.getOppositeDirection(game.direction) == game.movements[0]) {
+                game.movements.shift();
+            }
         }, true);
     }
-    
+
     // onload procedure
     window.onload = function() {
-        
+
         // initialize fields
         statusEl = document.getElementById("status");
         pointsEl = document.getElementById("points");
@@ -77,20 +79,19 @@
         // assign event handlers for each direction
         directions.getDirections().forEach(function(direction) {
             directions.getKeyCodes(direction).forEach(function(keyCode) {
-                assignMovementEventHandler(direction, keyCode);    
+                assignMovementEventHandler(direction, keyCode);
             });
         });
-        
+
         // assign GUI event handlers
         document.getElementById("newGame").addEventListener("click", function() {
             game = new SnakeGame(size, size);
             graphics = SnakeGraphics(game, canvas, context);
         });
-        
+
         window.addEventListener("resize", resizeGame);
-        
+
         resizeGame();
         tick();
     }
-
-})();
+}());
